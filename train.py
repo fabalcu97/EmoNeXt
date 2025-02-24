@@ -321,10 +321,24 @@ def plot_images():
     plt.show()
 
 
+def repeat_tensor(x):
+    return x.repeat(3, 1, 1)
+
+
+def repeat_crops(crops):
+    return torch.stack([crop.repeat(3, 1, 1) for crop in crops])
+
+
+def crop(crops):
+    return torch.stack([transforms.ToTensor()(crop) for crop in crops])
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train EmoNeXt on Fer2013")
 
-    parser.add_argument("--dataset-path", type=str, help="Path to the dataset")
+    parser.add_argument(
+        "--dataset-path", type=str, help="Path to the dataset", default="FER2013"
+    )
     parser.add_argument(
         "--output-dir",
         type=str,
@@ -388,7 +402,7 @@ if __name__ == "__main__":
             transforms.RandomRotation(degrees=20),
             transforms.RandomCrop(224),
             transforms.ToTensor(),
-            transforms.Lambda(lambda x: x.repeat(3, 1, 1)),
+            repeat_tensor,
         ]
     )
 
@@ -398,7 +412,7 @@ if __name__ == "__main__":
             transforms.Resize(236),
             transforms.RandomCrop(224),
             transforms.ToTensor(),
-            transforms.Lambda(lambda x: x.repeat(3, 1, 1)),
+            repeat_tensor,
         ]
     )
 
@@ -407,14 +421,8 @@ if __name__ == "__main__":
             transforms.Grayscale(),
             transforms.Resize(236),
             transforms.TenCrop(224),
-            transforms.Lambda(
-                lambda crops: torch.stack(
-                    [transforms.ToTensor()(crop) for crop in crops]
-                )
-            ),
-            transforms.Lambda(
-                lambda crops: torch.stack([crop.repeat(3, 1, 1) for crop in crops])
-            ),
+            crop,
+            repeat_crops,
         ]
     )
 
