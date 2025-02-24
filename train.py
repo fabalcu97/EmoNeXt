@@ -78,7 +78,7 @@ class Trainer:
         self.optimizer = AdamW(model.parameters(), lr=lr)
         self.scaler = torch.amp.GradScaler(self.device, enabled=self.amp)
         self.scheduler = CosineAnnealingWithWarmRestartsLR(
-            self.optimizer, warmup_steps=128, cycle_steps=1024
+            self.optimizer, warmup_steps=128, cycle_steps=1024, max_lr=1e-5
         )
         self.ema = EMA(model, beta=ema_decay, update_every=ema_update_every).to(
             self.device
