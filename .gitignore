@@ -4,3 +4,5 @@ wandb/
 .vscode/
 __pycache__/
 outputs/
+
+.env

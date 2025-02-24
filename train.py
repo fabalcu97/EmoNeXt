@@ -1,8 +1,11 @@
 import argparse
+import os
 import random
 import sys
+import wandb
 from datetime import datetime
 from pathlib import Path
+from dotenv import load_dotenv
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,9 +17,18 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from tqdm import tqdm
 
-import wandb
+from notifications import TelegramNotifier
 from models import get_model
 from scheduler import CosineAnnealingWithWarmRestartsLR
+
+load_dotenv()
+TELEGRAM_API_KEY = os.getenv("TELEGRAM_API_KEY")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+
+wandb_api_key = os.environ.get("WANDB_API_KEY")
+wandb.login(key=wandb_api_key)
+
+notifier = TelegramNotifier(TELEGRAM_API_KEY, TELEGRAM_CHAT_ID)
 
 seed = 2001
 torch.manual_seed(seed)
@@ -64,7 +76,7 @@ class Trainer:
         self.model = model.to(self.device)
 
         self.optimizer = AdamW(model.parameters(), lr=lr)
-        self.scaler = torch.cuda.amp.GradScaler(enabled=self.amp)
+        self.scaler = torch.amp.GradScaler(self.device, enabled=self.amp)
         self.scheduler = CosineAnnealingWithWarmRestartsLR(
             self.optimizer, warmup_steps=128, cycle_steps=1024
         )
@@ -87,6 +99,8 @@ class Trainer:
         wandb.watch(model, log="all")
 
     def run(self):
+        notifier.send_message(f"[IMPORTANT] - Training is starting.")
+
         counter = 0  # Counter for epochs with no validation loss improvement
 
         images, _ = next(iter(self.training_dataloader))
@@ -109,6 +123,9 @@ class Trainer:
                     "Epoch": epoch + 1,
                 }
             )
+            notifier.send_message(
+                f"Epoch {epoch + 1}/{self.epochs} completed. Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}, Train Accuracy: {train_accuracy:.2f}%, Val Accuracy: {val_accuracy:.2f}%"
+            )
 
             # Early stopping
             if val_accuracy > self.best_val_accuracy:
@@ -117,6 +134,7 @@ class Trainer:
                 self.best_val_accuracy = val_accuracy
             else:
                 counter += 1
+                print(f"Patience counter: {counter}/{self.early_stopping_patience}")
                 if counter >= self.early_stopping_patience:
                     print(
                         "Validation loss did not improve for %d epochs. Stopping training."
@@ -126,6 +144,9 @@ class Trainer:
 
         self.test_model()
         wandb.finish()
+        notifier.send_message(
+            f"[IMPORTANT] - Training is completed. Best validation accuracy: {self.best_val_accuracy:.2f}%"
+        )
 
     def train_epoch(self):
         self.model.train()
@@ -133,7 +154,12 @@ class Trainer:
         avg_accuracy = []
         avg_loss = []
 
-        pbar = tqdm(unit="batch", file=sys.stdout, total=len(self.training_dataloader))
+        pbar = tqdm(
+            unit="batch",
+            file=sys.stdout,
+            total=len(self.training_dataloader),
+            desc="Train",
+        )
         for batch_idx, data in enumerate(self.training_dataloader):
             inputs, labels = data
 
@@ -175,7 +201,10 @@ class Trainer:
         true_labels = []
 
         pbar = tqdm(
-            unit="batch", file=sys.stdout, total=len(self.validation_dataloader)
+            unit="batch",
+            file=sys.stdout,
+            total=len(self.validation_dataloader),
+            desc="Validate",
         )
         for batch_idx, (inputs, labels) in enumerate(self.validation_dataloader):
             inputs = inputs.to(self.device)
@@ -221,7 +250,12 @@ class Trainer:
         predicted_labels = []
         true_labels = []
 
-        pbar = tqdm(unit="batch", file=sys.stdout, total=len(self.testing_dataloader))
+        pbar = tqdm(
+            unit="batch",
+            file=sys.stdout,
+            total=len(self.testing_dataloader),
+            desc="Test",
+        )
         for batch_idx, (inputs, labels) in enumerate(self.testing_dataloader):
             bs, ncrops, c, h, w = inputs.shape
             inputs = inputs.view(-1, c, h, w)
