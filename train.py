@@ -425,7 +425,7 @@ if __name__ == "__main__":
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     exec_name = f"EmoNeXt_{opt.model_size}_{current_time}"
 
-    wandb.init(project="EmoNeXt", name=exec_name, anonymous="must")
+    wandb.init(project="EmoNeXt", name=exec_name, anonymous="never")
 
     train_transform = transforms.Compose(
         [
