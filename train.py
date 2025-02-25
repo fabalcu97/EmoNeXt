@@ -78,7 +78,7 @@ class Trainer:
         self.optimizer = AdamW(model.parameters(), lr=lr)
         self.scaler = torch.amp.GradScaler(self.device, enabled=self.amp)
         self.scheduler = CosineAnnealingWithWarmRestartsLR(
-            self.optimizer, warmup_steps=128, cycle_steps=1024, max_lr=1e-5
+            self.optimizer, warmup_steps=128, cycle_steps=1024, max_lr=1e-6
         )
         self.ema = EMA(model, beta=ema_decay, update_every=ema_update_every).to(
             self.device
@@ -380,6 +380,9 @@ if __name__ == "__main__":
         help="Path where the best model will be saved",
     )
     parser.add_argument(
+        "--patience", type=int, default=12, help="Number of patience before giving up"
+    )
+    parser.add_argument(
         "--epochs", type=int, default=20, help="Number of training epochs"
     )
     parser.add_argument(
@@ -488,6 +491,7 @@ if __name__ == "__main__":
         execution_name=exec_name,
         lr=opt.lr,
         output_dir=opt.output_dir,
+        early_stopping_patience=opt.patience,
         checkpoint_path=opt.checkpoint,
         max_epochs=opt.epochs,
         amp=opt.amp,
