@@ -74,3 +74,10 @@ New training with standard parameters.
 ```
 python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --epochs=300 --amp --in_22k --num-workers=8 --model-size='tiny' --checkpoint /workspace/EmoNeXt/out/latest/second_checkpoint.pt --patience=50
 ```
+
+[WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/3wi3del2)
+
+#### Second run of the day
+```
+python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.00001 --scheduler-max-lr=0.00001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30
+```

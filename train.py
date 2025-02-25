@@ -30,13 +30,13 @@ wandb.login(key=wandb_api_key)
 
 notifier = TelegramNotifier(TELEGRAM_API_KEY, TELEGRAM_CHAT_ID)
 
-seed = 2001
-torch.manual_seed(seed)
-torch.cuda.manual_seed(seed)
-random.seed(seed)
-np.random.seed(seed)
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
+# seed = 2001
+# torch.manual_seed(seed)
+# torch.cuda.manual_seed(seed)
+# random.seed(seed)
+# np.random.seed(seed)
+# torch.backends.cudnn.deterministic = True
+# torch.backends.cudnn.benchmark = False
 
 
 class Trainer:
@@ -57,6 +57,7 @@ class Trainer:
         ema_update_every: int = 16,
         gradient_accumulation_steps: int = 1,
         checkpoint_path: str = None,
+        scheduler_max_rate: int = 1e-4
     ):
         self.epochs = max_epochs
 
@@ -67,7 +68,8 @@ class Trainer:
         self.classes = classes
         self.num_classes = len(classes)
 
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device(
+            "cuda" if torch.cuda.is_available() else "cpu")
         print("Device used: " + self.device.type)
 
         self.amp = amp
@@ -78,7 +80,8 @@ class Trainer:
         self.optimizer = AdamW(model.parameters(), lr=lr)
         self.scaler = torch.amp.GradScaler(self.device, enabled=self.amp)
         self.scheduler = CosineAnnealingWithWarmRestartsLR(
-            self.optimizer, warmup_steps=128, cycle_steps=1024, max_lr=1e-6
+            self.optimizer, warmup_steps=128, cycle_steps=1024,
+            max_lr=scheduler_max_rate
         )
         self.ema = EMA(model, beta=ema_decay, update_every=ema_update_every).to(
             self.device
@@ -134,7 +137,8 @@ class Trainer:
                 self.best_val_accuracy = val_accuracy
             else:
                 counter += 1
-                print(f"Patience counter: {counter}/{self.early_stopping_patience}")
+                print(
+                    f"Patience counter: {counter}/{self.early_stopping_patience}")
                 if counter >= self.early_stopping_patience:
                     print(
                         "Validation loss did not improve for %d epochs. Stopping training."
@@ -178,14 +182,16 @@ class Trainer:
                 self.ema.update()
                 self.scheduler.step()
 
-            batch_accuracy = (predictions == labels).sum().item() / labels.size(0)
+            batch_accuracy = (
+                predictions == labels).sum().item() / labels.size(0)
 
             avg_loss.append(loss.item())
             avg_accuracy.append(batch_accuracy)
 
             # Update progress bar
             pbar.set_postfix(
-                {"loss": np.mean(avg_loss), "acc": np.mean(avg_accuracy) * 100.0}
+                {"loss": np.mean(avg_loss), "acc": np.mean(
+                    avg_accuracy) * 100.0}
             )
             pbar.update(1)
 
@@ -300,14 +306,16 @@ class Trainer:
         batch = torch.utils.data.Subset(val_dataset, range(32))
 
         # Access the batch data
-        batch = torch.stack([batch[i][0] for i in range(len(batch))]).to(self.device)
+        batch = torch.stack([batch[i][0]
+                            for i in range(len(batch))]).to(self.device)
         with torch.autocast(self.device.type, enabled=self.amp):
             stn_batch = self.model.stn(batch)
 
         to_pil = transforms.ToPILImage()
 
         grid = to_pil(torchvision.utils.make_grid(batch, nrow=16, padding=4))
-        stn_batch = to_pil(torchvision.utils.make_grid(stn_batch, nrow=16, padding=4))
+        stn_batch = to_pil(torchvision.utils.make_grid(
+            stn_batch, nrow=16, padding=4))
 
         wandb.log({"batch": wandb.Image(grid), "stn": wandb.Image(stn_batch)})
 
@@ -321,7 +329,8 @@ class Trainer:
             "best_acc": self.best_val_accuracy,
         }
 
-        torch.save(data, str(self.output_directory / f"{self.execution_name}.pt"))
+        torch.save(data, str(self.output_directory /
+                   f"{self.execution_name}.pt"))
 
     def load(self, path):
         data = torch.load(path, map_location=self.device)
@@ -389,6 +398,8 @@ if __name__ == "__main__":
         "--batch-size", type=int, default=32, help="Batch size for training"
     )
     parser.add_argument("--lr", type=float, default=1e-4, help="Learning rate")
+    parser.add_argument("--scheduler-max-lr", type=float,
+                        default=1e-4, help="Scheduler max learning rate")
     parser.add_argument(
         "--amp",
         action="store_true",
@@ -430,6 +441,8 @@ if __name__ == "__main__":
 
     wandb.init(project="EmoNeXt", name=exec_name, anonymous="never")
 
+    wandb.log({"config": vars(opt)})
+
     train_transform = transforms.Compose(
         [
             transforms.RandomHorizontalFlip(),
@@ -463,9 +476,12 @@ if __name__ == "__main__":
         ]
     )
 
-    train_dataset = datasets.ImageFolder(opt.dataset_path + "/train", train_transform)
-    val_dataset = datasets.ImageFolder(opt.dataset_path + "/val", val_transform)
-    test_dataset = datasets.ImageFolder(opt.dataset_path + "/test", test_transform)
+    train_dataset = datasets.ImageFolder(
+        opt.dataset_path + "/train", train_transform)
+    val_dataset = datasets.ImageFolder(
+        opt.dataset_path + "/val", val_transform)
+    test_dataset = datasets.ImageFolder(
+        opt.dataset_path + "/test", test_transform)
 
     print("Using %d images for training." % len(train_dataset))
     print("Using %d images for evaluation." % len(val_dataset))
@@ -480,7 +496,8 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_dataset, batch_size=1, shuffle=False)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
-    net = get_model(len(train_dataset.classes), opt.model_size, in_22k=opt.in_22k)
+    net = get_model(len(train_dataset.classes),
+                    opt.model_size, in_22k=opt.in_22k)
 
     Trainer(
         model=net,
@@ -495,4 +512,5 @@ if __name__ == "__main__":
         checkpoint_path=opt.checkpoint,
         max_epochs=opt.epochs,
         amp=opt.amp,
+        scheduler_max_rate=opt.scheduler_max_rate
     ).run()
