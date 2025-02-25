@@ -512,5 +512,5 @@ if __name__ == "__main__":
         checkpoint_path=opt.checkpoint,
         max_epochs=opt.epochs,
         amp=opt.amp,
-        scheduler_max_rate=opt.scheduler_max_rate
+        scheduler_max_rate=opt.scheduler_max_lr
     ).run()
