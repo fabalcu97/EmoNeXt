@@ -37,7 +37,7 @@ Modified:
 
 
 ### 24-02-25
-Trining in VastAI. Standard parameters just changed the `lr` to `1e-5`.
+Training in VastAI. Standard parameters. Changed `lr` to `1e-5`.
 
 [WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/bik59ns6)
 
@@ -46,3 +46,31 @@ Completed with `64.17%` accuracy. Continued training with `max_lr` in the schedu
 [Second WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/pyyxay0n)
 
 Completed with `65.51%` accuracy. Continued training with increased patience (30) in the early stopping.
+
+```
+python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --epochs=300 --amp --in_22k --num-workers=8 --model-size='tiny' --checkpoint /workspace/EmoNeXt/out/latest/second_checkpoint.pt --patience=30
+```
+
+[Third WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/psw83gix)
+
+```
+Run history:
+         Epoch ▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇████
+Train Accuracy ▁▁▂▁▁▂▂▃▂▂▃▃▃▄▃▄▃▄▄▄▄▅▄▅▄▅▆▆▆▆▇▆▆▇▇▇▇▇▇█
+    Train Loss ████▇▇▇▆▇▆▆▆▅▆▅▅▅▅▄▅▄▄▄▃▅▃▃▃▂▂▃▂▂▂▂▂▁▁▂▁
+  Val Accuracy ▂▂▂▄▂▃▄▅▂▂▅▂▃▁▄▇▂▃▅▆▅▁█▃▅▄▄▆▇▄▆▆▇▆▆▃▆▆▆▇
+      Val Loss ▁▂▁▁▂▃▂▂▂▂▂▄▂▂▁▃▃▃▂▃▄▃▃█▄▂▅▃▃▄▄▄▆▄▅▄▅▅▆▅
+
+Run summary:
+         Epoch 73
+Train Accuracy 79.46629
+    Train Loss 1.12147
+  Val Accuracy 66.03511
+      Val Loss 1.40177
+```
+### 25-02-25
+New training with standard parameters.
+
+```
+python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --epochs=300 --amp --in_22k --num-workers=8 --model-size='tiny' --checkpoint /workspace/EmoNeXt/out/latest/second_checkpoint.pt --patience=50
+```
