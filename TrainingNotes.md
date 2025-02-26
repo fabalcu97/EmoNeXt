@@ -81,3 +81,10 @@ python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --epochs=30
 ```
 python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.00001 --scheduler-max-lr=0.00001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30
 ```
+[WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/ysj776ra)
+
+### 26-02-25
+EmoNeXt training without pre-trained model. Standard parameters.
+```
+python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30
+```
