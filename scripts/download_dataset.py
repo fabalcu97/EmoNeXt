@@ -1,3 +1,4 @@
+import kaggle
 import os
 import shutil
 import subprocess
@@ -26,7 +27,6 @@ if not os.path.isfile(kaggle_json_path):
     os.chmod(kaggle_json_path, 0o600)
 
 # Importing kaggle will authenticate automatically
-import kaggle
 
 # Command to authenticate and download the dataset
 api_command = "kaggle competitions download -c challenges-in-representation-learning-facial-expression-recognition-challenge -f fer2013.tar.gz"
@@ -63,7 +63,7 @@ emotion_labels = {
 # Create the output folders and subfolders if they do not exist
 if not os.path.exists(output_folder_path):
     os.makedirs(output_folder_path)
-for usage in ["train", "val", "test"]:
+for usage in ["train", "valid", "test"]:
     usage_folder_path = os.path.join(output_folder_path, usage)
     if not os.path.exists(usage_folder_path):
         os.makedirs(usage_folder_path)
@@ -83,11 +83,14 @@ for index, row in df.iterrows():
     # Get the emotion label and determine the output subfolder based on the Usage column
     emotion_label = emotion_labels[str(row["emotion"])]
     if row["Usage"] == "Training":
-        output_subfolder_path = os.path.join(output_folder_path, "train", emotion_label)
+        output_subfolder_path = os.path.join(
+            output_folder_path, "train", emotion_label)
     elif row["Usage"] == "PublicTest":
-        output_subfolder_path = os.path.join(output_folder_path, "val", emotion_label)
+        output_subfolder_path = os.path.join(
+            output_folder_path, "valid", emotion_label)
     else:
-        output_subfolder_path = os.path.join(output_folder_path, "test", emotion_label)
+        output_subfolder_path = os.path.join(
+            output_folder_path, "test", emotion_label)
 
     # Save the image to the output subfolder
     output_file_path = os.path.join(output_subfolder_path, f"{index}.jpg")

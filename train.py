@@ -70,6 +70,7 @@ class Trainer:
 
         self.device = torch.device(
             "cuda" if torch.cuda.is_available() else "cpu")
+        # self.device = torch.device("mps")
         print("Device used: " + self.device.type)
 
         self.amp = amp
@@ -479,7 +480,7 @@ if __name__ == "__main__":
     train_dataset = datasets.ImageFolder(
         opt.dataset_path + "/train", train_transform)
     val_dataset = datasets.ImageFolder(
-        opt.dataset_path + "/val", val_transform)
+        opt.dataset_path + "/valid", val_transform)
     test_dataset = datasets.ImageFolder(
         opt.dataset_path + "/test", test_transform)
 
