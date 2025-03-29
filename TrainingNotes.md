@@ -47,7 +47,7 @@ Completed with `64.17%` accuracy. Continued training with `max_lr` in the schedu
 
 Completed with `65.51%` accuracy. Continued training with increased patience (30) in the early stopping.
 
-```
+```bash
 python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --epochs=300 --amp --in_22k --num-workers=8 --model-size='tiny' --checkpoint /workspace/EmoNeXt/out/latest/second_checkpoint.pt --patience=30
 ```
 
@@ -71,20 +71,37 @@ Train Accuracy 79.46629
 ### 25-02-25
 New training with standard parameters.
 
-```
+```bash
 python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --epochs=300 --amp --in_22k --num-workers=8 --model-size='tiny' --checkpoint /workspace/EmoNeXt/out/latest/second_checkpoint.pt --patience=50
 ```
 
 [WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/3wi3del2)
 
 #### Second run of the day
-```
+```bash
 python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.00001 --scheduler-max-lr=0.00001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30
 ```
 [WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/ysj776ra)
 
 ### 26-02-25
 EmoNeXt training without pre-trained model. Standard parameters.
+```bash
+python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30 --checkpoint /workspace/EmoNeXt/out/latest/first_checkpoint_63_81.pt
 ```
-python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30
+
+### 26-02-25
+EmoNeXt training without pre-trained model. Standard parameters.
+
+```bash
+python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30 --checkpoint=/workspace/EmoNeXt/out/latest/second_checkpoint_66_73.pt
+
+python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30 --checkpoint=/workspace/EmoNeXt/out/latest/first_checkpoint_63_81.pt
+
+python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30 --checkpoint=/workspace/EmoNeXt/out/latest/second_checkpoint_66_73.pt
+```
+
+### 28-03-25
+EmoNeXt training with new dataset.
+```bash
+python train.py --dataset-path='/workspace/givemefive-dataset/parsed-dataset' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30
 ```
