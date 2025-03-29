@@ -77,7 +77,6 @@ python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --epochs=30
 
 [WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/3wi3del2)
 
-#### Second run of the day
 ```bash
 python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.00001 --scheduler-max-lr=0.00001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30
 ```
@@ -105,3 +104,13 @@ EmoNeXt training with new dataset.
 ```bash
 python train.py --dataset-path='/workspace/givemefive-dataset/parsed-dataset' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30
 ```
+
+Results: https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/ccjeevk1
+
+### 29-03-25
+EmoNeXt training with new dataset and pre-trained model
+
+```bash
+python train.py --dataset-path='/workspace/givemefive-dataset/parsed-dataset' --batch-size=64 --lr=0.0001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30
+```
+Results: https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/z2outr71

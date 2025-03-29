@@ -128,7 +128,7 @@ class Trainer:
                 }
             )
             notifier.send_message(
-                f"Epoch {epoch + 1}/{self.epochs} completed. Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}, Train Accuracy: {train_accuracy:.2f}%, Val Accuracy: {val_accuracy:.2f}%"
+                f"Epoch {epoch + 1}/{self.epochs} completed. Patience: {counter}/{self.early_stopping_patience}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}, Train Accuracy: {train_accuracy:.2f}%, Val Accuracy: {val_accuracy:.2f}%"
             )
 
             # Early stopping
