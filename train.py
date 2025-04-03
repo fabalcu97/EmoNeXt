@@ -433,12 +433,18 @@ if __name__ == "__main__":
         default="tiny",
         help="Choose the size of the model: tiny, small, base, large, or xlarge",
     )
+    parser.add_argument(
+        "--experiment-name",
+        type=str,
+        required=True,
+        help="Name of the experiment",
+    )
 
     opt = parser.parse_args()
     print(opt)
 
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    exec_name = f"EmoNeXt_{opt.model_size}_{current_time}"
+    exec_name = f"EmoNeXt_{opt.experiment_name}_{opt.model_size}_{current_time}"
 
     wandb.init(project="EmoNeXt", name=exec_name, anonymous="never")
 
