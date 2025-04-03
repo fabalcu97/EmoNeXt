@@ -57,7 +57,7 @@ emotion_labels = {
     "3": "Happy",
     "4": "Sad",
     "5": "Surprise",
-    "6": "Neutral",
+    # "6": "Neutral",
 }
 
 # Create the output folders and subfolders if they do not exist
@@ -81,7 +81,9 @@ for index, row in df.iterrows():
     img = Image.fromarray(img_array.astype("uint8"), "L")
 
     # Get the emotion label and determine the output subfolder based on the Usage column
-    emotion_label = emotion_labels[str(row["emotion"])]
+    emotion_label = emotion_labels.get(str(row["emotion"]), None)
+    if emotion_label is None:
+        continue
     if row["Usage"] == "Training":
         output_subfolder_path = os.path.join(
             output_folder_path, "train", emotion_label)
@@ -98,4 +100,3 @@ for index, row in df.iterrows():
 
 print("Deleting temporary files..")
 os.remove("fer2013.tar.gz")
-shutil.rmtree("fer2013")
