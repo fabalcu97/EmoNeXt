@@ -1,3 +1,11 @@
+## Setup
+VastAI
+  1x RTX 4090
+  AMD Epic 7282 16-Core
+  100GB RAM
+  
+
+
 ### 21-02-25 
 Training with standard parameters, just changed the `lr` and scheduler `max_lr` to `1e-5`
 
@@ -108,9 +116,27 @@ python train.py --dataset-path='/workspace/givemefive-dataset/parsed-dataset' --
 Results: https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/ccjeevk1
 
 ### 29-03-25
-EmoNeXt training with new dataset and pre-trained model
+EmoNeXt training with new dataset and pre-trained model. No neutral emotion
 
 ```bash
-python train.py --dataset-path='/workspace/givemefive-dataset/parsed-dataset' --batch-size=64 --lr=0.0001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30
+python train.py --dataset-path='/workspace/givemefive-dataset/parsed-dataset' --batch-size=64 --lr=0.0001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30 --experiment-name='givemefive-dataset'
 ```
 Results: https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/z2outr71
+
+### 03-04-25
+EmoxNet training with original dataset and pre-trained model. No neutral emotion.
+
+```bash
+python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30 --experiment-name='FER2013_no_neutral'
+```
+Results: https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/mdk4k69z
+ACC: 75.25%
+
+### 03-04-25
+EmoNeXt training with gimefive dataset and pre-trained model. No neutral emotion
+
+```bash
+python train.py --dataset-path='/workspace/givemefive-dataset/parsed-dataset' --batch-size=64 --lr=0.0001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30 --experiment-name='givemefive-dataset'
+```
+Results: https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/k4b93wds
+ACC: 81.5%
