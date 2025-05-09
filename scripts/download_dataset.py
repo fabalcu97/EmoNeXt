@@ -1,4 +1,4 @@
-import kaggle
+# import kaggle
 import os
 import shutil
 import subprocess
@@ -38,6 +38,7 @@ except subprocess.CalledProcessError as e:
     print(
         "An error occurred while downloading the dataset. Please double-check your Kaggle API key."
     )
+    # os.remove(kaggle_json_path)
 
 print("Preparing dataset..")
 with tarfile.open("fer2013.tar.gz", "r") as tar:
