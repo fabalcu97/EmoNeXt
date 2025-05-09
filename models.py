@@ -38,6 +38,45 @@ class SELayer(nn.Module):
         return x * y.expand_as(x)
 
 
+class CBAMLayer(nn.Module):
+    def __init__(self, channel, reduction=16, kernel_size=7):
+        super(CBAMLayer, self).__init__()
+
+        # Channel Attention (same as SE but with max pooling too)
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.max_pool = nn.AdaptiveMaxPool2d(1)
+
+        self.shared_mlp = nn.Sequential(
+            nn.Linear(channel, channel // reduction, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Linear(channel // reduction, channel, bias=False)
+        )
+        self.sigmoid_channel = nn.Sigmoid()
+
+        # Spatial Attention
+        self.conv_spatial = nn.Conv2d(
+            2, 1, kernel_size=kernel_size, padding=kernel_size // 2, bias=False)
+        self.sigmoid_spatial = nn.Sigmoid()
+
+    def forward(self, x):
+        b, c, h, w = x.size()
+
+        # Channel Attention
+        avg_out = self.shared_mlp(self.avg_pool(x).view(b, c))
+        max_out = self.shared_mlp(self.max_pool(x).view(b, c))
+        channel_att = self.sigmoid_channel(avg_out + max_out).view(b, c, 1, 1)
+        x = x * channel_att.expand_as(x)
+
+        # Spatial Attention
+        avg_out = torch.mean(x, dim=1, keepdim=True)
+        max_out, _ = torch.max(x, dim=1, keepdim=True)
+        spatial_att = self.sigmoid_spatial(
+            self.conv_spatial(torch.cat([avg_out, max_out], dim=1)))
+        x = x * spatial_att.expand_as(x)
+
+        return x
+
+
 class DotProductSelfAttention(nn.Module):
     def __init__(self, input_dim):
         super(DotProductSelfAttention, self).__init__()
@@ -117,7 +156,8 @@ class Block(nn.Module):
         self.act = nn.GELU()
         self.pwconv2 = nn.Linear(4 * dim, dim)
         self.gamma = (
-            nn.Parameter(layer_scale_init_value * torch.ones((dim)), requires_grad=True)
+            nn.Parameter(layer_scale_init_value *
+                         torch.ones((dim)), requires_grad=True)
             if layer_scale_init_value > 0
             else None
         )
@@ -185,14 +225,17 @@ class EmoNeXt(nn.Module):
             downsample_layer = nn.Sequential(
                 LayerNorm(dims[i], eps=1e-6, data_format="channels_first"),
                 nn.Conv2d(dims[i], dims[i + 1], kernel_size=2, stride=2),
-                SELayer(dims[i + 1]),
+
+                # SELayer(dims[i + 1]),
+                CBAMLayer(dims[i + 1]),
             )
             self.downsample_layers.append(downsample_layer)
 
         self.stages = (
             nn.ModuleList()
         )  # 4 feature resolution stages, each consisting of multiple residual blocks
-        dp_rates = [x.item() for x in torch.linspace(0, drop_path_rate, sum(depths))]
+        dp_rates = [x.item()
+                    for x in torch.linspace(0, drop_path_rate, sum(depths))]
         cur = 0
         for i in range(4):
             stage = nn.Sequential(
@@ -252,7 +295,8 @@ class EmoNeXt(nn.Module):
             mean_attention_weight = torch.mean(weights)
             attention_loss = torch.mean((weights - mean_attention_weight) ** 2)
 
-            loss = F.cross_entropy(logits, labels, label_smoothing=0.2) + attention_loss
+            loss = F.cross_entropy(
+                logits, labels, label_smoothing=0.2) + attention_loss
             return torch.argmax(logits, dim=1), logits, loss
 
         return torch.argmax(logits, dim=1), logits
