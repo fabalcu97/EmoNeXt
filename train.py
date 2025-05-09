@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 
+from torchinfo import summary
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -25,7 +26,7 @@ load_dotenv()
 TELEGRAM_API_KEY = os.getenv("TELEGRAM_API_KEY")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
-wandb_api_key = os.environ.get("WANDB_API_KEY")
+wandb_api_key = os.getenv("WANDB_API_KEY")
 wandb.login(key=wandb_api_key)
 
 notifier = TelegramNotifier(TELEGRAM_API_KEY, TELEGRAM_CHAT_ID)
@@ -440,6 +441,14 @@ if __name__ == "__main__":
         help="Name of the experiment",
     )
 
+    parser.add_argument(
+        "--show-summary",
+        type=bool,
+        required=False,
+        default=False,
+        help="Show the model summary and exit",
+    )
+
     opt = parser.parse_args()
     print(opt)
 
@@ -505,6 +514,10 @@ if __name__ == "__main__":
 
     net = get_model(len(train_dataset.classes),
                     opt.model_size, in_22k=opt.in_22k)
+
+    if opt.show_summary:
+        summary(net)
+        os._exit(0)
 
     Trainer(
         model=net,
