@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.hub import load_state_dict_from_url
-from torchvision.models import vgg16_bn, VGG16_BN_Weights
+from fightingcv_attention.attention.CBAM import CBAMBlock
 from torchvision.ops import StochasticDepth
 
 model_urls = {
@@ -227,7 +227,8 @@ class EmoNeXt(nn.Module):
                 nn.Conv2d(dims[i], dims[i + 1], kernel_size=2, stride=2),
 
                 # SELayer(dims[i + 1]),
-                CBAMLayer(dims[i + 1]),
+                # CBAMLayer(dims[i + 1]),
+                CBAMBlock(channel=dims[i + 1], reduction=16, kernel_size=7)
             )
             self.downsample_layers.append(downsample_layer)
 

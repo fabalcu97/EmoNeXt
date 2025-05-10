@@ -3,7 +3,6 @@ VastAI
   1x RTX 4090
   AMD Epic 7282 16-Core
   100GB RAM
-  
 
 
 ### 21-02-25 
@@ -18,21 +17,6 @@ Picked up where the last training ended with ACC of `64.0290%`
 [Kaggle execution](https://www.kaggle.com/code/fabalcu97/notebook7a361dbffe/log?scriptVersionId=223834882) - 
 [WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/yp5ibufd)
 
-```
-Run history:
-         Epoch ▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇███
-Train Accuracy ▁▂▁▃▂▂▃▂▃▂▃▃▄▄▄▅▃▅▄▅▅▅▆▅▆▅▇▆▆▇▆▇▆█▆█▇▇
-    Train Loss █▇▇▆▇▇▆▇▆▆▅▆▅▅▅▄▅▄▅▄▄▄▃▃▃▄▂▃▂▂▃▂▃▁▂▁▁▁
-  Val Accuracy ▄▄▃▄▅▄▄▄▂▅▅▄▄▃▅▆▆▆▅▆▁▄▄▅▄█▆▆▆▃▆▆▇▆▅▅█▆
-      Val Loss ▃▂▃▃▃▂▄▃▅▃▂▃▃▅▃▃▃▂▁▁█▃▄▃▃▁▁▃▂▆▄▃▂▄▃▂▂▃
-
-Run summary:
-         Epoch 38
-Train Accuracy 72.99131
-    Train Loss 1.21648
-  Val Accuracy 64.92059
-      Val Loss 1.37431
-```
 
 ### 23-02-25
 Training with standard parameters, picked up where the last training ended with accuracy of `64.92059%`.
@@ -61,21 +45,6 @@ python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --epochs=30
 
 [Third WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/psw83gix)
 
-```
-Run history:
-         Epoch ▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇████
-Train Accuracy ▁▁▂▁▁▂▂▃▂▂▃▃▃▄▃▄▃▄▄▄▄▅▄▅▄▅▆▆▆▆▇▆▆▇▇▇▇▇▇█
-    Train Loss ████▇▇▇▆▇▆▆▆▅▆▅▅▅▅▄▅▄▄▄▃▅▃▃▃▂▂▃▂▂▂▂▂▁▁▂▁
-  Val Accuracy ▂▂▂▄▂▃▄▅▂▂▅▂▃▁▄▇▂▃▅▆▅▁█▃▅▄▄▆▇▄▆▆▇▆▆▃▆▆▆▇
-      Val Loss ▁▂▁▁▂▃▂▂▂▂▂▄▂▂▁▃▃▃▂▃▄▃▃█▄▂▅▃▃▄▄▄▆▄▅▄▅▅▆▅
-
-Run summary:
-         Epoch 73
-Train Accuracy 79.46629
-    Train Loss 1.12147
-  Val Accuracy 66.03511
-      Val Loss 1.40177
-```
 ### 25-02-25
 New training with standard parameters.
 
@@ -113,7 +82,7 @@ EmoNeXt training with new dataset.
 python train.py --dataset-path='/workspace/givemefive-dataset/parsed-dataset' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30
 ```
 
-Results: https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/ccjeevk1
+[WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/ccjeevk1)
 
 ### 29-03-25
 EmoNeXt training with new dataset and pre-trained model. No neutral emotion
@@ -121,7 +90,7 @@ EmoNeXt training with new dataset and pre-trained model. No neutral emotion
 ```bash
 python train.py --dataset-path='/workspace/givemefive-dataset/parsed-dataset' --batch-size=64 --lr=0.0001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30 --experiment-name='givemefive-dataset'
 ```
-Results: https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/z2outr71
+[WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/z2outr71)
 
 ### 03-04-25
 EmoxNet training with original dataset and pre-trained model. No neutral emotion.
@@ -129,7 +98,8 @@ EmoxNet training with original dataset and pre-trained model. No neutral emotion
 ```bash
 python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30 --experiment-name='FER2013_no_neutral'
 ```
-Results: https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/mdk4k69z
+[WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/mdk4k69z)
+
 ACC: 75.25%
 
 ### 03-04-25
@@ -139,4 +109,21 @@ EmoNeXt training with gimefive dataset and pre-trained model. No neutral emotion
 python train.py --dataset-path='/workspace/givemefive-dataset/parsed-dataset' --batch-size=64 --lr=0.0001 --epochs=150 --amp --in_22k --num-workers=8 --model-size='tiny' --patience=30 --experiment-name='givemefive-dataset'
 ```
 Results: https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/k4b93wds
+
 ACC: 81.5%
+
+# Experiment: `cbam_custom_implementation`
+### Details
+- All trainings are without neutral emotion
+- All trainings are with pre-trained model
+- All trainings are with the custom `cbam` block
+
+### Runs
+- [Original dataset](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/ya4txb7g) - Accuracy: 75.5316%
+- [GimeFive dataset](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/o9mkmp79) - Accuracy: 79.7792%
+
+# Experiment: `cbam_external_implementation`
+### Details
+- All trainings are without neutral emotion
+- All trainings are with pre-trained model
+- All trainings are with the [external `cbam` block](https://github.com/xmu-xiaoma666/External-Attention-pytorch)
