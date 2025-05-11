@@ -290,7 +290,9 @@ class Trainer:
             .item()
         )
         print("Test Accuracy: %.4f %%" % (accuracy * 100.0))
-
+        notifier.send_message(
+            f"[IMPORTANT] - Test accuracy: {accuracy * 100.0:.2f}%"
+        )
         wandb.log(
             {
                 "confusion_matrix": wandb.plot.confusion_matrix(
@@ -456,8 +458,6 @@ if __name__ == "__main__":
     exec_name = f"EmoNeXt_{opt.experiment_name}_{opt.model_size}_{current_time}"
 
     wandb.init(project="EmoNeXt", name=exec_name, anonymous="never")
-
-    wandb.log({"config": vars(opt)})
 
     train_transform = transforms.Compose(
         [
