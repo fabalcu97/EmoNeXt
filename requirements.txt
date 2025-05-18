@@ -13,3 +13,4 @@ wandb==0.19.9
 opencv-python==4.11.0.86
 torchinfo==1.8.0
 fightingcv-attention==1.0.0
+grad-cam==1.5.5

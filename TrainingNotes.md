@@ -72,9 +72,10 @@ EmoNeXt training without pre-trained model. Standard parameters.
 python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30 --checkpoint=/workspace/EmoNeXt/out/latest/second_checkpoint_66_73.pt
 
 python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30 --checkpoint=/workspace/EmoNeXt/out/latest/first_checkpoint_63_81.pt
-
-python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.0001 --scheduler-max-lr=0.00001 --epochs=150 --amp --num-workers=8 --model-size='tiny' --patience=30 --checkpoint=/workspace/EmoNeXt/out/latest/second_checkpoint_66_73.pt
 ```
+
+[WandB logs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/0w0bz95l)
+Accuracy: 68.0970 %
 
 ### 28-03-25
 EmoNeXt training with new dataset.
@@ -127,3 +128,10 @@ ACC: 81.5%
 - All trainings are without neutral emotion
 - All trainings are with pre-trained model
 - All trainings are with the [external `cbam` block](https://github.com/xmu-xiaoma666/External-Attention-pytorch)
+
+### Runs
+- [ConvNeXt - Tiny] - Accuracy: 71.99%
+- [Original dataset w/neutral emotion 0-150epochs](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/wytzhslv) - Accuracy: 72.3043%
+- [Original dataset w/neutral emotion 150-300epochs]() - Accuracy: 
+- [Original dataset w/o neutral emotion](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/hdk4q7zg) - Accuracy: 76.4765%
+- [GimeFive dataset](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/7h9tt9o9) - Accuracy: 80.2352%

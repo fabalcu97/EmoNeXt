@@ -57,7 +57,7 @@ emotion_labels = {
     "3": "Happy",
     "4": "Sad",
     "5": "Surprise",
-    # "6": "Neutral",
+    "6": "Neutral",
 }
 
 # Create the output folders and subfolders if they do not exist

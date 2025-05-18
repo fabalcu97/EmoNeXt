@@ -70,8 +70,8 @@ class Trainer:
         self.num_classes = len(classes)
 
         self.device = torch.device(
+            "mps" if torch.backends.mps.is_available() else
             "cuda" if torch.cuda.is_available() else "cpu")
-        # self.device = torch.device("mps")
         print("Device used: " + self.device.type)
 
         self.amp = amp
@@ -104,7 +104,7 @@ class Trainer:
         wandb.watch(model, log="all")
 
     def run(self):
-        notifier.send_message(f"[IMPORTANT] - Training is starting.")
+        notifier.send_message("[IMPORTANT] - Training is starting.")
 
         counter = 0  # Counter for epochs with no validation loss improvement
 
@@ -380,7 +380,41 @@ def crop(crops):
     return torch.stack([transforms.ToTensor()(crop) for crop in crops])
 
 
-if __name__ == "__main__":
+train_transform = transforms.Compose(
+    [
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomVerticalFlip(),
+        transforms.Grayscale(),
+        transforms.Resize(236),
+        transforms.RandomRotation(degrees=20),
+        transforms.RandomCrop(224),
+        transforms.ToTensor(),
+        repeat_tensor,
+    ]
+)
+
+val_transform = transforms.Compose(
+    [
+        transforms.Grayscale(),
+        transforms.Resize(236),
+        transforms.RandomCrop(224),
+        transforms.ToTensor(),
+        repeat_tensor,
+    ]
+)
+
+test_transform = transforms.Compose(
+    [
+        transforms.Grayscale(),
+        transforms.Resize(236),
+        transforms.TenCrop(224),
+        crop,
+        repeat_crops,
+    ]
+)
+
+
+def parse_arguments():
     parser = argparse.ArgumentParser(description="Train EmoNeXt on Fer2013")
 
     parser.add_argument(
@@ -451,53 +485,23 @@ if __name__ == "__main__":
         help="Show the model summary and exit",
     )
 
-    opt = parser.parse_args()
-    print(opt)
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    configuration = parse_arguments()
 
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    exec_name = f"EmoNeXt_{opt.experiment_name}_{opt.model_size}_{current_time}"
+    exec_name = f"EmoNeXt_{configuration.experiment_name}_{configuration.model_size}_{current_time}"
 
     wandb.init(project="EmoNeXt", name=exec_name, anonymous="never")
 
-    train_transform = transforms.Compose(
-        [
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            transforms.Grayscale(),
-            transforms.Resize(236),
-            transforms.RandomRotation(degrees=20),
-            transforms.RandomCrop(224),
-            transforms.ToTensor(),
-            repeat_tensor,
-        ]
-    )
-
-    val_transform = transforms.Compose(
-        [
-            transforms.Grayscale(),
-            transforms.Resize(236),
-            transforms.RandomCrop(224),
-            transforms.ToTensor(),
-            repeat_tensor,
-        ]
-    )
-
-    test_transform = transforms.Compose(
-        [
-            transforms.Grayscale(),
-            transforms.Resize(236),
-            transforms.TenCrop(224),
-            crop,
-            repeat_crops,
-        ]
-    )
-
     train_dataset = datasets.ImageFolder(
-        opt.dataset_path + "/train", train_transform)
+        configuration.dataset_path + "/train", train_transform)
     val_dataset = datasets.ImageFolder(
-        opt.dataset_path + "/valid", val_transform)
+        configuration.dataset_path + "/valid", val_transform)
     test_dataset = datasets.ImageFolder(
-        opt.dataset_path + "/test", test_transform)
+        configuration.dataset_path + "/test", test_transform)
 
     print("Using %d images for training." % len(train_dataset))
     print("Using %d images for evaluation." % len(val_dataset))
@@ -505,17 +509,18 @@ if __name__ == "__main__":
 
     train_loader = DataLoader(
         train_dataset,
-        batch_size=opt.batch_size,
+        batch_size=configuration.batch_size,
         shuffle=True,
-        num_workers=opt.num_workers,
+        num_workers=configuration.num_workers,
     )
     val_loader = DataLoader(val_dataset, batch_size=1, shuffle=False)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
     net = get_model(len(train_dataset.classes),
-                    opt.model_size, in_22k=opt.in_22k)
+                    configuration.model_size, in_22k=configuration.in_22k)
 
-    if opt.show_summary:
+    if configuration.show_summary:
+        print(train_dataset.classes)
         summary(net)
         os._exit(0)
 
@@ -526,11 +531,11 @@ if __name__ == "__main__":
         testing_dataloader=test_loader,
         classes=train_dataset.classes,
         execution_name=exec_name,
-        lr=opt.lr,
-        output_dir=opt.output_dir,
-        early_stopping_patience=opt.patience,
-        checkpoint_path=opt.checkpoint,
-        max_epochs=opt.epochs,
-        amp=opt.amp,
-        scheduler_max_rate=opt.scheduler_max_lr
+        lr=configuration.lr,
+        output_dir=configuration.output_dir,
+        early_stopping_patience=configuration.patience,
+        checkpoint_path=configuration.checkpoint,
+        max_epochs=configuration.epochs,
+        amp=configuration.amp,
+        scheduler_max_rate=configuration.scheduler_max_lr
     ).run()
