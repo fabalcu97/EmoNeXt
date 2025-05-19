@@ -93,7 +93,7 @@ class Trainer:
         for epoch in range(self.epochs):
             print("[Epoch: %d/%d]" % (epoch + 1, self.epochs))
 
-            train_loss, train_accuracy = self.train_epoch(epoch)
+            train_loss, train_accuracy = self.train_epoch()
             val_loss, val_accuracy = self.val_epoch()
 
             self.wandb_run.log(
