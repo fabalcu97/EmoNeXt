@@ -6,10 +6,10 @@ pandas==2.2.3
 Pillow==11.1.0
 python-dotenv==1.1.0
 Requests==2.32.3
-torch==2.6.0
-torchvision==0.21.0
+torch==2.7.0
+torchvision==0.22.0
 tqdm==4.67.1
-wandb==0.19.9
+wandb==0.19.11
 opencv-python==4.11.0.86
 torchinfo==1.8.0
 fightingcv-attention==1.0.0

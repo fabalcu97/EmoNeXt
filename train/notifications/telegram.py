@@ -1,8 +1,16 @@
 import requests
 
+from os import getenv
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TELEGRAM_API_KEY = getenv("TELEGRAM_API_KEY")
+TELEGRAM_CHAT_ID = getenv("TELEGRAM_CHAT_ID")
+
 
 class TelegramNotifier:
-    def __init__(self, api_token: str, chat_id: str):
+    def __init__(self, api_token: str = TELEGRAM_API_KEY, chat_id: str = TELEGRAM_CHAT_ID):
         self.api_token = api_token
         self.chat_id = chat_id
         self.base_url = f"https://api.telegram.org/bot{self.api_token}/sendMessage"
