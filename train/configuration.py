@@ -80,7 +80,8 @@ def parse_arguments():
     parser.add_argument(
         "--use-cbam",
         type=bool,
-        required=True,
+        required=False,
+        default=False,
         help="Use CBAM or SE. True for CBAM, False for SE",
     )
 
