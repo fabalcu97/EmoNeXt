@@ -8,3 +8,6 @@ outputs/
 .env
 *.jpg
 *.png
+
+out/
+fer2013/

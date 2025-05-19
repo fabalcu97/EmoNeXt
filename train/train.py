@@ -1,16 +1,15 @@
-import sys
 import torch
+import wandb
 # import torchvision
 import numpy as np
 
 import torchvision
-from tqdm.contrib import tenumerate
 from pathlib import Path
 from ema_pytorch import EMA
 from torch.optim import AdamW
-import wandb
 from wandb.wandb_run import Run
 from torchvision import transforms
+from tqdm.contrib import tenumerate
 from torch.utils.data import DataLoader
 
 

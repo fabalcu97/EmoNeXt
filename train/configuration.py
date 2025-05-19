@@ -77,6 +77,12 @@ def parse_arguments():
         required=True,
         help="Name of the experiment",
     )
+    parser.add_argument(
+        "--use-cbam",
+        type=bool,
+        required=True,
+        help="Use CBAM or SE. True for CBAM, False for SE",
+    )
 
     parser.add_argument(
         "--show-summary",
