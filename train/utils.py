@@ -6,10 +6,7 @@ from torch.utils.data import DataLoader
 
 
 def get_device():
-    if torch.backends.mps.is_available():
-        print("Using MPS")
-        return torch.device("mps")
-    elif torch.cuda.is_available():
+    if torch.cuda.is_available():
         print("Using CUDA")
         return torch.device("cuda")
     else:
