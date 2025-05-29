@@ -79,16 +79,14 @@ def parse_arguments():
     )
     parser.add_argument(
         "--use-cbam",
-        type=bool,
-        required=False,
+        action="store_true",
         default=False,
         help="Use CBAM or SE. True for CBAM, False for SE",
     )
 
     parser.add_argument(
         "--show-summary",
-        type=bool,
-        required=False,
+        action="store_true",
         default=False,
         help="Show the model summary and exit",
     )

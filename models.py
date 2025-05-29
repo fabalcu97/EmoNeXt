@@ -264,7 +264,11 @@ class EmoNeXt(nn.Module):
         return torch.argmax(logits, dim=1), logits
 
 
-def get_model(num_classes, model_size="tiny", in_22k=False):
+def get_model(num_classes, configuration):
+    in_22k = getattr(configuration, 'in_22k', False)
+    model_size = getattr(configuration, 'model_size', 'tiny')
+    use_cbam = getattr(configuration, 'use_cbam', False)
+
     if model_size == "tiny":
         depths = [3, 3, 9, 3]
         dims = [96, 192, 384, 768]
@@ -307,7 +311,8 @@ def get_model(num_classes, model_size="tiny", in_22k=False):
         default_num_classes = 21841
 
     net = EmoNeXt(
-        depths=depths, dims=dims, num_classes=default_num_classes, drop_path_rate=0.1
+        depths=depths, dims=dims, num_classes=default_num_classes, drop_path_rate=0.1,
+        use_cbam=use_cbam
     )
 
     state_dict = load_state_dict_from_url(url=url)

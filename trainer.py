@@ -36,8 +36,7 @@ if __name__ == "__main__":
         configuration, train_dataset, val_dataset, test_dataset)
 
     exec_name = f"{configuration.model_size}_{configuration.experiment_name}"
-    net = get_model(len(train_dataset.classes),
-                    configuration.model_size, in_22k=configuration.in_22k)
+    net = get_model(len(train_dataset.classes), configuration=configuration)
 
     if configuration.show_summary:
         print(train_dataset.classes)
