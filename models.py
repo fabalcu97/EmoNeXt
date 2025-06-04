@@ -149,7 +149,8 @@ class EmoNeXt(nn.Module):
         dims=None,
         drop_path_rate=0.0,
         layer_scale_init_value=1e-6,
-        use_cbam=False
+        use_cbam=False,
+        dropout=None
     ):
         super().__init__()
 
@@ -196,6 +197,7 @@ class EmoNeXt(nn.Module):
         self.stages = (
             nn.ModuleList()
         )  # 4 feature resolution stages, each consisting of multiple residual blocks
+
         dp_rates = [x.item()
                     for x in torch.linspace(0, drop_path_rate, sum(depths))]
         cur = 0
@@ -213,6 +215,8 @@ class EmoNeXt(nn.Module):
             self.stages.append(stage)
             cur += depths[i]
 
+        if dropout is not None:
+            self.dropout = nn.Dropout(dropout)  # dropout
         self.norm = nn.LayerNorm(dims[-1], eps=1e-6)  # final norm layer
         self.attention = DotProductSelfAttention(dims[-1])
         self.head = nn.Linear(dims[-1], num_classes)
@@ -243,9 +247,15 @@ class EmoNeXt(nn.Module):
         for i in range(4):
             x = self.downsample_layers[i](x)
             x = self.stages[i](x)
-        return self.norm(
-            x.mean([-2, -1])
-        )  # global average pooling, (N, C, H, W) -> (N, C)
+
+        # dropout could also appear here!
+        x = x.mean([-2, -1])       # Global average pooling
+        x = self.norm(x)           # LayerNorm
+
+        if self.dropout is not None:
+            x = self.dropout(x)        # Apply dropout on pooled feature vector
+
+        return x                   # Shape (N, C)
 
     def forward(self, x, labels=None):
         x = self.stn(x)
@@ -268,6 +278,8 @@ def get_model(num_classes, configuration):
     in_22k = getattr(configuration, 'in_22k', False)
     model_size = getattr(configuration, 'model_size', 'tiny')
     use_cbam = getattr(configuration, 'use_cbam', False)
+    dropout = getattr(configuration, 'dropout', None)
+    drop_path_rate = getattr(configuration, 'drop_path_rate', 0.5)
 
     if model_size == "tiny":
         depths = [3, 3, 9, 3]
@@ -311,8 +323,8 @@ def get_model(num_classes, configuration):
         default_num_classes = 21841
 
     net = EmoNeXt(
-        depths=depths, dims=dims, num_classes=default_num_classes, drop_path_rate=0.1,
-        use_cbam=use_cbam
+        depths=depths, dims=dims, num_classes=default_num_classes, drop_path_rate=drop_path_rate,
+        use_cbam=use_cbam, dropout=dropout
     )
 
     state_dict = load_state_dict_from_url(url=url)

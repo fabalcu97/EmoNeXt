@@ -83,6 +83,18 @@ def parse_arguments():
         default=False,
         help="Use CBAM or SE. True for CBAM, False for SE",
     )
+    parser.add_argument(
+        '--drop-path-rate',
+        type=float,
+        default=0.1,
+        help='Drop path rate for the ConvNeXt blocks',
+    )
+    parser.add_argument(
+        '--dropout',
+        type=float,
+        default=None,
+        help='Dropout rate for the model',
+    )
 
     parser.add_argument(
         "--show-summary",
