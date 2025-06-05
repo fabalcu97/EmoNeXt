@@ -252,7 +252,7 @@ class EmoNeXt(nn.Module):
         x = x.mean([-2, -1])       # Global average pooling
         x = self.norm(x)           # LayerNorm
 
-        if self.dropout is not None:
+        if hasattr(self, 'dropout'):
             x = self.dropout(x)        # Apply dropout on pooled feature vector
 
         return x                   # Shape (N, C)
