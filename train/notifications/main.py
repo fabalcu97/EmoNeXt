@@ -10,7 +10,7 @@ class Notifier:
             val_accuracy, patience_counter, early_stopping_patience
     ):
         message = (
-            f"Epoch {epoch + 1}/{epochs}: Train Loss: {train_loss: .4f}, Val Loss: {val_loss: .4f},"
+            f"Epoch {epoch}/{epochs}: Train Loss: {train_loss: .4f}, Val Loss: {val_loss: .4f},"
             + f"Train Accuracy: {train_accuracy: .2f} % , Val Accuracy: {val_accuracy: .2f} %, "
             + f"Patience: {patience_counter}/{early_stopping_patience}"
         )
