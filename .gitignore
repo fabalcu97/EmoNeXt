@@ -10,4 +10,7 @@ outputs/
 *.png
 
 out/
-fer2013/
+datasets/
+temporal_datasets/
+.DS_Store
+*_confusion_matrix.csv

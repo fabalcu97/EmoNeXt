@@ -1,9 +1,9 @@
-# Run from local machin
+# Run from local machine
 scp /Users/fabalcu97/.ssh/vastai/github vastai:.ssh/github
 
 # Run on vast.ai machine
-ssh-add ~/.ssh/github
 eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/github
 git clone git@github.com:fabalcu97/EmoNeXt.git
 git clone git@github.com:fabalcu97/givemefive-dataset.git
 cd /workspace/EmoNeXt
