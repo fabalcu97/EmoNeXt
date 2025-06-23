@@ -6,7 +6,7 @@ from rafDB import RafDB
 
 datasets = {
     "fer2013": Fer2013,
-    "ck+": CkPlus,
+    "ckplus": CkPlus,
     "rafdb": RafDB,
 }
 
@@ -16,7 +16,7 @@ parser.add_argument(
     "-d",
     choices=list(datasets.keys()),
     required=True,
-    help="Dataset to download and prepare (fer2013, ck+, rafdb)",
+    help="Dataset to download and prepare (fer2013, ckplus, rafdb)",
 )
 args = parser.parse_args()
 
