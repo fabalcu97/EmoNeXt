@@ -5,7 +5,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="Train EmoNeXt model")
 
     parser.add_argument(
-        "--dataset-path", type=str, help="Path to the dataset", default="FER2013"
+        "--dataset", "-d", type=str, help="Dataset. (fer2013, ck+, rafdb)", default="fer2013"
     )
     parser.add_argument(
         "--output-dir",

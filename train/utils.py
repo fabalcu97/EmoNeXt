@@ -1,3 +1,4 @@
+import os
 import torch
 
 from torchvision import datasets
@@ -67,14 +68,26 @@ def get_image_transforms():
 
 
 def get_datasets(configuration):
+    train_dataset_path = os.path.join("datasets", configuration.dataset + "/train")
+    test_dataset_path = os.path.join("datasets", configuration.dataset + "/test")
+    validation_dataset_path = os.path.join("datasets", configuration.dataset + "/valid")
+
+    if (
+        not os.path.exists(train_dataset_path)
+        or not os.path.exists(test_dataset_path)
+        or not os.path.exists(validation_dataset_path)
+    ):
+        raise FileNotFoundError(
+            "Dataset paths do not exist. Don't forget to run scripts/download_dataset.py first."
+        )
+
     train_transform, validation_transform, test_transform = get_image_transforms()
 
-    train_dataset = datasets.ImageFolder(
-        configuration.dataset_path + "/train", train_transform)
+    train_dataset = datasets.ImageFolder(train_dataset_path, train_transform)
     validation_dataset = datasets.ImageFolder(
-        configuration.dataset_path + "/valid", validation_transform)
-    test_dataset = datasets.ImageFolder(
-        configuration.dataset_path + "/test", test_transform)
+        validation_dataset_path, validation_transform
+    )
+    test_dataset = datasets.ImageFolder(test_dataset_path, test_transform)
 
     return train_dataset, validation_dataset, test_dataset
 
