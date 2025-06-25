@@ -135,3 +135,14 @@ ACC: 81.5%
 - [Original dataset w/neutral emotion 150-300epochs]() - Accuracy: 
 - [Original dataset w/o neutral emotion](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/hdk4q7zg) - Accuracy: 76.4765%
 - [GimeFive dataset](https://wandb.ai/fabalcu97-personal/EmoNeXt/runs/7h9tt9o9) - Accuracy: 80.2352%
+
+
+
+# New Runs
+
+- [x] `python trainer.py --batch-size=128 --lr=0.0001 --epochs=150 --patience=15 --amp --in_22k --num-workers=8 --model-size=base --scheduler-max-lr=0.00001 --dataset=fer2013 --experiment-name=baseline_fer2013`
+- [x] `python trainer.py --batch-size=128 --lr=0.0001 --epochs=150 --patience=15 --amp --in_22k --num-workers=8 --model-size=base --scheduler-max-lr=0.00001 --dataset=fer2013 --use-cbam --drop-path-rate=0.2 --experiment-name=cbam_fer2013`
+- [x] `python trainer.py --batch-size=128 --lr=0.0001 --epochs=150 --patience=15 --amp --in_22k --num-workers=8 --model-size=base --scheduler-max-lr=0.00001 --dataset=ckplus --experiment-name=baseline_ckplus`
+- [x] `python trainer.py --batch-size=128 --lr=0.0001 --epochs=150 --patience=15 --amp --in_22k --num-workers=8 --model-size=base --scheduler-max-lr=0.00001 --dataset=ckplus --use-cbam --drop-path-rate=0.2 --experiment-name=cbam_ckplus`
+- [x] `python trainer.py --batch-size=128 --lr=0.0001 --epochs=150 --patience=15 --amp --in_22k --num-workers=8 --model-size=base --scheduler-max-lr=0.00001 --dataset=rafdb --experiment-name=baseline_rafdb`
+- [x] `python trainer.py --batch-size=128 --lr=0.0001 --epochs=150 --patience=15 --amp --in_22k --num-workers=8 --model-size=base --scheduler-max-lr=0.00001 --dataset=rafdb --use-cbam --drop-path-rate=0.2 --experiment-name=cbam_rafdb`

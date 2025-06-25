@@ -48,6 +48,7 @@ if __name__ == "__main__":
         name=exec_name,
         anonymous='never',
         config=configuration,
+        mode="disabled" if configuration.local else "online",
         project="emonext-cbam",
     )
     run.watch(net, log="all")
@@ -68,6 +69,7 @@ if __name__ == "__main__":
             output_dir=configuration.output_dir,
             checkpoint_path=configuration.checkpoint,
             early_stopping_patience=configuration.patience,
+            use_focal_loss=configuration.use_focal_loss,
             ema_update_every=configuration.ema_update_every,
             scheduler_max_rate=configuration.scheduler_max_lr,
             gradient_accumulation_steps=configuration.gradient_accumulation_steps,

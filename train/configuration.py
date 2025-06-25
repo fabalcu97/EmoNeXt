@@ -102,5 +102,19 @@ def parse_arguments():
         default=False,
         help="Show the model summary and exit",
     )
+    parser.add_argument(
+        "--use-focal-loss",
+        "-fl",
+        action="store_true",
+        default=False,
+        help="Use Focal Loss instead of Cross Entropy Loss",
+    )
+    parser.add_argument(
+        "--local",
+        "-l",
+        action="store_true",
+        default=False,
+        help="Run locally without logging to WandB",
+    )
 
     return parser.parse_args()

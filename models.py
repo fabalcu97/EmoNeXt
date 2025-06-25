@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.hub import load_state_dict_from_url
 from fightingcv_attention.attention.CBAM import CBAMBlock
-from torchvision.ops import StochasticDepth
+from torchvision.ops import StochasticDepth, focal_loss
 
 model_urls = {
     "convnext_tiny_1k": "https://dl.fbaipublicfiles.com/convnext/convnext_tiny_1k_224_ema.pth",
@@ -150,7 +150,8 @@ class EmoNeXt(nn.Module):
         drop_path_rate=0.0,
         layer_scale_init_value=1e-6,
         use_cbam=False,
-        dropout=None
+        dropout=None,
+        use_focal_loss=False
     ):
         super().__init__()
 
@@ -158,6 +159,8 @@ class EmoNeXt(nn.Module):
             dims = [96, 192, 384, 768]
         if depths is None:
             depths = [3, 3, 9, 3]
+
+        self.use_focal_loss = use_focal_loss
 
         # Spatial transformer localization-network
         self.localization = nn.Sequential(
@@ -267,8 +270,15 @@ class EmoNeXt(nn.Module):
             mean_attention_weight = torch.mean(weights)
             attention_loss = torch.mean((weights - mean_attention_weight) ** 2)
 
-            loss = F.cross_entropy(
-                logits, labels, label_smoothing=0.2) + attention_loss
+            loss = attention_loss
+            if self.use_focal_loss:
+                # Convert labels to one-hot for focal loss
+                labels_onehot = F.one_hot(labels, num_classes=logits.size(1)).type_as(logits)
+                loss += focal_loss.sigmoid_focal_loss(
+                    logits, labels_onehot, alpha=0.25, gamma=2.0, reduction='mean')
+            else:
+                loss += F.cross_entropy(logits, labels, label_smoothing=0.2)
+
             return torch.argmax(logits, dim=1), logits, loss
 
         return torch.argmax(logits, dim=1), logits
@@ -278,6 +288,7 @@ def get_model(num_classes, configuration):
     in_22k = getattr(configuration, 'in_22k', False)
     model_size = getattr(configuration, 'model_size', 'tiny')
     use_cbam = getattr(configuration, 'use_cbam', False)
+    use_focal_loss = getattr(configuration, 'use_focal_loss', False)
     dropout = getattr(configuration, 'dropout', None)
     drop_path_rate = getattr(configuration, 'drop_path_rate', 0.5)
 
@@ -324,7 +335,7 @@ def get_model(num_classes, configuration):
 
     net = EmoNeXt(
         depths=depths, dims=dims, num_classes=default_num_classes, drop_path_rate=drop_path_rate,
-        use_cbam=use_cbam, dropout=dropout
+        use_cbam=use_cbam, dropout=dropout, use_focal_loss=use_focal_loss
     )
 
     state_dict = load_state_dict_from_url(url=url)
