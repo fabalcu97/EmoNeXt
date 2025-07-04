@@ -146,3 +146,8 @@ ACC: 81.5%
 - [x] `python trainer.py --batch-size=128 --lr=0.0001 --epochs=150 --patience=15 --amp --in_22k --num-workers=8 --model-size=base --scheduler-max-lr=0.00001 --dataset=ckplus --use-cbam --drop-path-rate=0.2 --experiment-name=cbam_ckplus`
 - [x] `python trainer.py --batch-size=128 --lr=0.0001 --epochs=150 --patience=15 --amp --in_22k --num-workers=8 --model-size=base --scheduler-max-lr=0.00001 --dataset=rafdb --experiment-name=baseline_rafdb`
 - [x] `python trainer.py --batch-size=128 --lr=0.0001 --epochs=150 --patience=15 --amp --in_22k --num-workers=8 --model-size=base --scheduler-max-lr=0.00001 --dataset=rafdb --use-cbam --drop-path-rate=0.2 --experiment-name=cbam_rafdb`
+- [x] `python trainer.py --batch-size=128 --lr=0.0001 --epochs=150 --patience=15 --amp --in_22k --num-workers=8 --model-size=base --scheduler-max-lr=0.00001 --dataset=gimefive --experiment-name=baseline_gimefive`
+- [x] `python trainer.py --batch-size=128 --lr=0.0001 --epochs=150 --patience=15 --amp --in_22k --num-workers=8 --model-size=base --scheduler-max-lr=0.00001 --dataset=gimefive --use-cbam --drop-path-rate=0.2 --experiment-name=cbam_gimefive`
+
+### Training with original repo
+ - [ ] `python train.py --dataset-path='FER2013' --batch-size=64 --lr=0.00001 --epochs=300 --amp --in_22k --num-workers=1 --model-size='base'`

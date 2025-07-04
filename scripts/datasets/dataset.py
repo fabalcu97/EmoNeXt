@@ -13,8 +13,8 @@ class Dataset:
         self.name = name
         self.path = path
         self.downloaded = False
-        self.download_path = os.path.join(os.path.dirname(__file__), "..", "temporal_datasets", self.name)
-        self.post_processed_path = os.path.join(os.path.dirname(__file__), "..", "datasets", self.name)
+        self.download_path = os.path.join(os.path.dirname(__file__), "../..", "temporal_datasets", self.name)
+        self.post_processed_path = os.path.join(os.path.dirname(__file__), "../..", "datasets", self.name)
 
     def __repr__(self):
         return f"Dataset(name={self.name}, path={self.path})"

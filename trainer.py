@@ -7,7 +7,7 @@ import numpy as np
 from torchinfo import summary
 from dotenv import load_dotenv
 
-from models import get_model
+from model import get_model
 from train.train import Trainer
 from train.configuration import parse_arguments
 from train.utils import get_data_loaders, get_datasets

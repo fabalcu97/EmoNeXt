@@ -68,9 +68,9 @@ def get_image_transforms():
 
 
 def get_datasets(configuration):
-    train_dataset_path = os.path.join("datasets", configuration.dataset + "/train")
-    test_dataset_path = os.path.join("datasets", configuration.dataset + "/test")
-    validation_dataset_path = os.path.join("datasets", configuration.dataset + "/valid")
+    train_dataset_path = os.path.join("datasets", configuration.get('dataset') + "/train")
+    test_dataset_path = os.path.join("datasets", configuration.get('dataset') + "/test")
+    validation_dataset_path = os.path.join("datasets", configuration.get('dataset') + "/valid")
 
     if (
         not os.path.exists(train_dataset_path)

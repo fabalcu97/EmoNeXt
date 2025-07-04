@@ -130,7 +130,7 @@ def main():
         "--output-dir",
         "--directorio-salida",
         "-o",
-        default=None,
+        default=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'confusion_matrices'),
         help="Directorio de salida. Si no se proporciona, guarda junto al archivo CSV.",
     )
 

@@ -8,9 +8,12 @@ outputs/
 .env
 *.jpg
 *.png
+*.csv
 
 out/
 datasets/
+!scripts/datasets
 temporal_datasets/
 .DS_Store
 *_confusion_matrix.csv
+metrics/
