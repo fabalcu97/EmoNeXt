@@ -1,20 +1,19 @@
-
 import os
 
 emotions = ["Angry", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral"]
-emotions_count = {
-    "Angry": 0,
-    "Disgust": 0,
-    "Fear": 0,
-    "Happy": 0,
-    "Sad": 0,
-    "Surprise": 0,
-    "Neutral": 0
-}
 datasets_path = os.path.join(os.path.dirname(__file__), "../datasets")
 datasets = os.listdir(datasets_path)
 
 for dataset in datasets:
+    emotions_count = {
+        "Angry": 0,
+        "Disgust": 0,
+        "Fear": 0,
+        "Happy": 0,
+        "Sad": 0,
+        "Surprise": 0,
+        "Neutral": 0,
+    }
     dataset_path = os.path.join(datasets_path, dataset)
     if not os.path.isdir(dataset_path):
         continue

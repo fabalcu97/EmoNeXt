@@ -22,12 +22,12 @@ test_transform = transforms.Compose(
 )
 
 configurations = [
-    # {"model_configs": {"use_cbam": False, }, "dataset": "fer2013", "model_name": "base_baseline_fer2013.pt"},
-    # {"model_configs": {"use_cbam": True, }, "dataset": "fer2013", "model_name": "base_cbam_fer2013.pt"},
+    {"model_configs": {"use_cbam": False, }, "dataset": "fer2013", "model_name": "base_baseline_fer2013.pt"},
+    {"model_configs": {"use_cbam": True, }, "dataset": "fer2013", "model_name": "base_cbam_fer2013.pt"},
     # {"model_configs": {"use_cbam": False, }, "dataset": "rafdb", "model_name": "base_baseline_rafdb.pt"},
     # {"model_configs": {"use_cbam": True, }, "dataset": "rafdb", "model_name": "base_cbam_rafdb.pt"},
-    {"model_configs": {"use_cbam": False, }, "dataset": "ckplus", "model_name": "base_baseline_fer2013.pt"},
-    {"model_configs": {"use_cbam": True, }, "dataset": "ckplus", "model_name": "base_cbam_fer2013.pt"},
+    # {"model_configs": {"use_cbam": False, }, "dataset": "ckplus", "model_name": "base_baseline_fer2013.pt"},
+    # {"model_configs": {"use_cbam": True, }, "dataset": "ckplus", "model_name": "base_cbam_fer2013.pt"},
     # {"model_configs": {"use_cbam": False, }, "dataset": "gimefive", "model_name": "base_baseline_gimefive.pt"},
     # {"model_configs": {"use_cbam": True, }, "dataset": "gimefive", "model_name": "base_cbam_gimefive.pt"},
 ]
